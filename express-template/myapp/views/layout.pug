@@ -1,7 +1,13 @@
 doctype html
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/static/css/common.css')
-  body
-    block content
+	head
+		title= title
+		link(rel='stylesheet', href='/static/css/common.css')
+	body
+		block header
+			.header header
+		block content
+
+		block footer
+			.footer footer
+		script(src="/static/js/main.min.js")

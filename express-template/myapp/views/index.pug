@@ -1,6 +1,140 @@
 extends layout
 
 block content
-  h1= title
-  p Welcome to #{title}
-  div jade test
+	.content
+		h1= title
+		p Welcome to #{title}
+		div jade test
+		ul
+			li Item a
+				a(href="javasript:viod(0);") a link
+			li Item b
+			li Item c
+		ol
+			li
+				span.text jade 用空格和缩进来组织代码结构
+			li
+				span.wrapper#wrapper 属性必须用括号，多个属性用逗号分隔
+				a(class="btn", href="##", title="test") Button
+			li
+				span.text 对于class 和id 可以省略标签名,自动生成一个div标签
+				.block 自动生成的div
+			li
+				span.text 获取文本的三种方式
+				ol
+					li 在文本的开头使用管道符 |，可以在文本里使用原生html标签
+					| 这是使用管道符的文本 <b>管道符 |</b>
+					li 文本和标签在一行，使用空格隔开
+					li.
+						大量文字时，在标签后使用一个点号（.）,切两者之间没有空格.
+						sometext,sometextsometext,sometext,sometextsometext
+			li
+				span.text 1、case 语句，显示 case 与when 匹配的代码块
+				- var friends = 10
+				case friends
+					when 0
+						p you have no friends
+					when 1
+						p you have a friends
+					default
+						p you have #{friends} friends
+				span.text 2、多个when 执行一个代码块
+				- var friends = 1
+				case friends
+					when 0
+					when 1
+						p you have few friends
+				span.text 3、when status后加个冒号，可以将代码块放到一行
+				- var friends = 1
+				case friends
+					when 0: p you have no friends
+					when 1: p you have a friends
+					default: p you have #{friends} friends
+			li
+				span.text js代码
+				ol
+					li 以横线 - 开头, 只是运行，不会输出
+						ul
+							-for (var x = 0; x < 3; x++)
+								li item
+					li 以等号 = 开头，会将html转义，可以将=及后面的文本与标签放在同一行
+						p= 'this code is <b>转义的</b>'
+					li 以!= 开头, 不会转义代码，
+						p!= 'this code is <b>转义的</b>'
+			li
+				span.text 变量调用
+				p 变量定义： - var定义
+				p 变量使用：
+				ol
+					li # {变量名}：在字符串中使用变量，此外还可以插入js代码
+					li = 直接赋值或者使用表达式，返回的是表达式的结果
+					li != 与2相同，不同点在不会转义代码／ ! {}, 与1相同，不同点在不会转义代码
+			li
+				span.text 标签插入 # []
+				p this is a link #[a(href="http://expressjs.com/zh-cn/", target="_blank") 插入的标签]
+			li
+				span.text 条件语句，可以省略括号
+				- var user = {description: 'foo bar baz'}
+				- var author = false
+				#user
+					if user.description
+						h2 Description
+						p.desc= user.description
+					else if author
+						h2 desc
+						p.desc.
+							user has no desc
+							why not add one...
+					else
+						p.desc user has nothing
+			li
+				span.text unless 表示否定语法，与 if !expr 是等价的
+				- var i = 0
+				unless i
+					p i is #{i}
+			li
+				span.text extends + block 关键字实现模版的继承，extends可以省略文件后缀名
+				ul
+					li 子模版中使用block 标识符 与父模版中block 标识符 相同
+					li 子模版中没有定义块内容，则默认显示父模版的块内容，否则会重写父模板里的内容
+					li 如果要追加代码片段而不是重写，使用append（在原有代码之后添加） 和 prepend（在原有代码之前添加）
+					li 同一个页面只能extends一个模版，多个模块可以使用include
+
+			li
+				span.text include：插入另一个jade文件至当前的jade文件中，include是将另一个文件里的内容直接拷贝进去，不像extends + block可以重写
+			li 迭代
+				p each/for...in , while 前面不用加短横线， for循环需要加短横线
+				p each/for val， index in obj
+				ul
+					each val, index in [1,2,3,4,5]
+						li= val + ':' + index
+			li
+				span.text mixins复用代码块，
+				p 语法：mixin mixinname(arguments)。 调用时直接 +mixinname
+				mixin list
+					ul
+						li foo
+						li bar
+				+list
+				p 带参数的mixin，可以当函数使用
+				mixin list(name)
+					li.item= name
+				ul
+					+list('lee')
+					+list('niu')
+					+list('xiaodao')
+				p 支持类似include块的功能
+				mixin list(title)
+					.item
+						h1= title
+						if block
+							block
+						else
+							p No content provided
+				+list('no block')
+				+list('has block')
+					p one block
+					p two block
+
+
+

@@ -7,6 +7,7 @@ var uglify = require('gulp-uglify')
 var minifycss = require('gulp-minify-css')
 var rename = require('gulp-rename')
 var nodemon = require('gulp-nodemon')
+var autoprefixer = require('gulp-autoprefixer')
 var reload = browserSync.reload
 
 var paths = {
@@ -18,6 +19,11 @@ gulp.task('less', function() {
 	return gulp.src(paths.less)
 		.pipe(plumber())
 		.pipe(less())
+		.pipe(autoprefixer({
+			browsers: ['last 4 versions', 'ie >= 8'],
+			cascade: true,
+			remove: true
+		}))
 		.pipe(minifycss())
 		.pipe(gulp.dest('./public/static/css'))
 		.pipe(reload({stream: true}))
@@ -26,7 +32,7 @@ gulp.task('less', function() {
 gulp.task('script', function() {
 	return gulp.src(paths.js)
 		.pipe(babel())
-		.pipe(rename({suffix: 'min'}))
+		.pipe(rename({suffix: '.min'}))
 		.pipe(uglify())
 		.pipe(gulp.dest('./public/static/js'))
 		.pipe(reload({stream: true}))
